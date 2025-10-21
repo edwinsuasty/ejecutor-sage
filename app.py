@@ -88,8 +88,8 @@ def fase2_sage():
 @app.post("/sagemath")
 def sagemath():
     # return fase0_echo()     # 1) primero prueba eco
-    return fase1_httpbin()  # 2) luego prueba httpbin
-    # return fase2_sage()       # 3) finalmente prueba Sage
+    # return fase1_httpbin()  # 2) luego prueba httpbin
+    return fase2_sage()       # 3) finalmente prueba Sage
 
 # Arranque local opcional
 if __name__ == "__main__":
