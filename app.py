@@ -4,8 +4,7 @@ def sagemath():
     if not data:
         data = request.form.to_dict() if request.form else {}
     codigo = (data.get("codigo") or "").strip()
-    if not codigo:
-        return jsonify({"success": False, "stdout": "", "stderr": "Falta 'codigo'"}), 200
+    return jsonify({"success": True, "echo_codigo": codigo, "note": "sin contactar Sage"}), 200
 
     try:
         upstream = requests.post(
