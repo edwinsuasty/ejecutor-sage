@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, Response
 import os
 
 app = Flask(__name__)
@@ -94,3 +94,46 @@ def sagemath():
 # Arranque local opcional
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=int(os.getenv("PORT", "8001")), debug=True)
+
+@app.get("/embed")
+def embed():
+    code = request.args.get("code", "factor(2025)")
+    auto = request.args.get("autoeval", "1")
+    auto_js = "true" if auto in ("1","true","True","yes") else "false"
+
+    html = f"""<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>SageMathCell embebida</title>
+  <script src="https://sagecell.sagemath.org/static/embedded_sagecell.js"></script>
+  <style>
+    html,body{{margin:0;padding:0;height:100%;}}
+    body{{font-family:sans-serif}}
+    #cell{{min-height:85vh;padding:8px}}
+    .bar{{padding:8px;background:#f1f1f1;border-bottom:1px solid #ddd}}
+  </style>
+</head>
+<body>
+  <div class="bar">Sage embebido — autoeval={auto_js}</div>
+  <div id="cell"></div>
+  <script>
+    (function(){{
+      var initial = {code!r};
+      try {{
+        initial = decodeURIComponent(initial);
+      }} catch(e) {{}}
+      sagecell.makeSagecell({{
+        inputLocation: '#cell',
+        template: sagecell.templates.minimal,
+        evalButtonText: 'Ejecutar',
+        autoeval: {auto_js},
+        code: initial,
+        hide: ['permalink']
+      }});
+    }})();
+  </script>
+</body>
+</html>"""
+    return Response(html, mimetype="text/html")
