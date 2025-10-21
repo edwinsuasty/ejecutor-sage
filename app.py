@@ -1,11 +1,10 @@
-from flask import Flask, request, jsonify
-import os
-
+from flask import Flask
 app = Flask(__name__)
 
 @app.get("/")
 def home():
     return "Proxy Sage ACTIVO"
+
 
 # === ELIGE UNA FASE A LA VEZ CAMBIANDO EL NOMBRE DE LA FUNCIÓN EXPUESTA ===
 #  - FASE_0_solo_echo : valida que el servidor responde a POST sin caer
