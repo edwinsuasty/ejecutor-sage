@@ -1,22 +1,13 @@
-from flask import Flask
+from flask import Flask, request, jsonify
 app = Flask(__name__)
 
 @app.get("/")
 def home():
     return "Proxy Sage ACTIVO"
 
-
-# === ELIGE UNA FASE A LA VEZ CAMBIANDO EL NOMBRE DE LA FUNCIÓN EXPUESTA ===
-#  - FASE_0_solo_echo : valida que el servidor responde a POST sin caer
-#  - FASE_1_httpbin   : valida salida a internet desde Render
-#  - FASE_2_sagecell  : conecta con SageMathCell con diagnóstico robusto
-
-
-# ---------- FASE 0: eco inmediato (sin internet) ----------
-def FASE_0_solo_echo_impl():
-    data = request.get_json(silent=True) or {}
-    if not data:
-        data = request.form.to_dict() if request.form else {}
+@app.post("/sagemath")
+def sagemath():
+    data = request.get_json(silent=True) or request.form.to_dict() or {}
     return jsonify({"success": True, "echo": data, "note": "fase0_ok"}), 200
 
 # ---------- FASE 1: prueba salida a internet (httpbin) ----------
